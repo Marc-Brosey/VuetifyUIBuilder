@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="CDN/css/fontfamily.css" rel="stylesheet">
+        <!-- <link href="CDN/css/mdi4.x/materialdesignicons.min.css" rel="stylesheet"> -->
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="CDN/css/vuetify2.x/vuetify.min.css" rel="stylesheet">
+
+        <style>
+            .markupCodeBlock {
+                display: block; 
+	            padding: 3px 3px 2px; 
+	            font-size: 14px; 
+	            line-height: 20px;
+	            width: 100%;
+	            font-family: Roboto;
+	            font-weight: bold;
+            }
+        </style>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        
+        <title>
+            Vue UI Builder Demo
+        </title>
+    </head>
+    <body>
+        <div id="app">
+            <v-app>
+                <v-main>
+                    <div>
+                        <v-navigation-drawer
+                            v-model="drawerRight"
+                            app
+                            clipped
+                            right
+                            width="350">
+                        </v-navigation-drawer>
+
+                        <v-navigation-drawer
+                            v-model="drawer"
+                            app
+                            width="350">
+                            <v-card>
+                                <v-list>
+                                    <v-list-item-group>
+                                        <v-list-item v-on:click="addComponent('row')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-rowing</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add Row
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="addComponent('column')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-table-column-plus-after</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add Column
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="addComponent('card')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-cards</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add v-card
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="getComponentInput('card_title', 'Title')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-format-font</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add v-card-title
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="addComponent('card_text')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-note-text</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add v-card-text
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="addComponent('card_actions')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-truck-fast</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add v-card-actions
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="getComponentInput('text_field', 'Text Field Label')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-format-text</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add Text Field
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-on:click="getComponentInput('button', 'Button Caption')">
+                                            <v-list-item-icon>
+                                                <v-icon>mdi-vector-rectangle</v-icon>
+                                            </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Add Button
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </v-list-item-group>
+                                </v-list>
+                            </v-card>
+                        </v-navigation-drawer>
+
+                        <v-app-bar
+                            app
+                            color="primary"
+                            dark>
+                            <!-- <v-app-bar-nav-icon
+                                @click.stop="drawer = !drawer">
+                            </v-app-bar-nav-icon> -->
+                            <v-toolbar-title>
+                                Vuetify UI Builder
+                            </v-toolbar-title>
+                            <!-- <v-app-bar-nav-icon
+                                right
+                                @click.stop="drawerRight = !drawerRight">
+                            </v-app-bar-nav-icon> -->
+
+                            <template v-slot:extension>
+                                <v-tabs
+                                    v-model="tab"
+                                    align-with-title>
+                                    <v-tabs-slider color="pink">
+                                    </v-tabs-slider>
+                                    <v-tab
+                                        v-for="item in tabNames"
+                                        :key="item">
+                                        {{ item }}
+                                    </v-tab>
+                                </v-tabs>
+                            </template>
+                        </v-app-bar>
+
+                        <v-tabs-items v-model="tab">
+                            <v-tab-item
+                                key="Design">
+                                <v-card flat>
+                                    <component :is="dynamicComponent" />
+                                </v-card>
+                            </v-tab-item>
+                            <v-tab-item
+                                key="Markup">
+                                <v-card flat>
+                                    <pre class="markupCodeBlock">
+                                        {{ markupCode }}
+                                    </pre>
+                                </v-card>
+                            </v-tab-item>
+                            <v-tab-item
+                                key="Display">
+                                <v-card flat>
+                                    <component :is="dynamicComponentDisplay" />
+                                </v-card>
+                            </v-tab-item>
+                        </v-tabs-items>
+                    </div>
+
+                    <v-dialog v-model="componentSetupDialog" max-width="600px">
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">
+                                    Add {{ newComponentDialogLabel }} for new component...
+                                </span>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-text-field
+                                                v-model="newComponentUserInput"
+                                                :label="newComponentDialogLabel">
+                                            </v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="#558B2F" dark @click="setupComponent">
+                                    Save
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-main>
+            </v-app>
+        </div>
+
+        <script src="CDN/js/vue2.x/vue.js"></script>
+        <script src="CDN/js/vuetify2.x/vuetify.js"></script>
+        <script src="CDN/js/js-beautify/1.14.7/beautify-html.js"></script>
+
+        <script>
+           var vueApp = new Vue({
+                el: "#app",
+                vuetify: new Vuetify(),
+                data: () => ({
+                    baseUrl: '',
+                    drawer: false,
+                    drawerRight: false,
+                    componentSetupDialog: false,
+
+                    currentComponent: '',
+                    currentPlus: -1,
+
+                    newComponent: '',
+                    newComponentDialogLabel: '',
+                    newComponentUserInput: '',
+
+                    plusIncrement: 0,
+                    rowIncrement: 0,
+
+                    tab: 'Design',
+                    tabNames: [ 'Design', 'Markup', 'Display'],
+
+                    designMarkup: ``,
+                    markupCode: ``,
+                    markupDisplay: ``,
+
+                    designTemplate: `
+                        <div class="text-center">
+                            <v-container>
+                                {{innerHTML}}
+                            </v-container>
+                        </div>`,
+                    
+                    designTemplateObject: {
+                        elements: [
+                            {
+                                component: 'plus_button',
+                                id: 'id="plus0"',
+                                click: '@click="plusClick(0)"'
+                            }
+                        ]
+                    },
+
+                    v_row: `<v-row class="ma-2"><v-btn {{id}} color="#558B2F" class="ma-2" dark x-small {{click}}>Add to Row</v-btn>{{innerHTML}}</v-row>`,
+                    v_column: `<v-col {{cols}} class="ma-2"><v-btn {{id}} color="#558B2F" class="ma-2" dark x-small {{click}}>Add to Column</v-btn>{{innerHTML}}</v-col>`,
+                    v_card: `<v-card class="ma-2"><v-btn {{id}} color="#558B2F" class="ma-2" dark x-small {{click}}>Add to Card</v-btn>{{innerHTML}}</v-card>`,
+                    v_card_title: `<v-card-title class="ma-2"><span class="headline">{{title}}</span></v-card-title>`,
+                    v_card_text: `<v-card-text class="ma-2"><v-container><v-btn {{id}} color="#558B2F" class="ma-2" dark x-small {{click}}>Add to Card Text</v-btn>{{innerHTML}}</v-container></v-card-text>`,
+                    v_container: `<v-container>{{innerHTML}}</v-container>`,
+                    v_text_field: `<v-col cols="12"><v-text-field {{label}} class="ma-2">{{innerHTML}}</v-text-field></v-col>`,
+                    v_card_actions: `<v-card-actions class="ma-2"><v-btn {{id}} color="#558B2F" class="ma-2" dark x-small {{click}}>Add to Card Actions</v-btn><v-spacer></v-spacer>{{innerHTML}}</v-card-actions>`,
+                    v_spacer: `<v-spacer></v-spacer>`,
+                    v_btn: `<v-btn class="ma-2" {{color}} {{type}} {{click}}>{{innerHTML}}</v-btn>`,
+                    plus_button: `<v-btn {{id}} color="#558B2F" class="ma-2" fab dark x-small {{click}}><v-icon>mdi-plus</v-icon></v-btn>`,
+
+                    v_row_markup: `<v-row>{{innerHTML}}</v-row>`,
+                    v_column_markup: `<v-col {{cols}}>{{innerHTML}}</v-col>`,
+                    v_card_markup: `<v-card>{{innerHTML}}</v-card>`,
+                    v_card_title_markup: `<v-card-title><span class="headline">{{title}}</span></v-card-title>`,
+                    v_card_text_markup: `<v-card-text><v-container>{{innerHTML}}</v-container></v-card-text>`,
+                    v_text_field_markup: `<v-col cols="12"><v-text-field {{label}}>{{innerHTML}}</v-text-field></v-col>`,
+                    v_card_actions_markup: `<v-card-actions><v-spacer></v-spacer>{{innerHTML}}</v-card-actions>`,
+                    v_btn_markup: `<v-btn {{color}} {{type}} {{click}}>{{innerHTML}}</v-btn>`,
+                }),
+
+                computed: {
+                    dynamicComponent: function () {
+                        return {
+                            template: `${this.designMarkup}`,
+                            methods: {
+                                plusClick (plusNumber) {
+                                    console.log("In plusClick method. Plus number:", plusNumber);
+                                    window.postMessage({
+                                        broadcastEvent: "plusClick",
+                                        plusNumber: plusNumber
+                                    }, "*");
+                                },
+
+                                insertIntoComponent (plusNumber) {
+                                    console.log("In insertIntoComponent method. Plus number:", plusNumber);
+                                    window.postMessage({
+                                        broadcastEvent: "component",
+                                        plusNumber: plusNumber
+                                    });
+                                }
+                            }
+                        }
+                    },
+                    dynamicComponentDisplay: function () {
+                        return {
+                            template: `${this.markupDisplay}`,
+                            methods: {
+
+                            }
+                        }
+                    }
+                },
+
+                mounted: function () {
+                    window.addEventListener('message', this.handleEvent);
+                    this.setupEverything();
+                },
+
+                watch: {
+                    '$route': 'setupEverything'
+                },
+
+                methods: {
+                    setupEverything () {
+                        this.initializeDesignFrame();
+                    },
+
+                    handleEvent (event) {
+                        this.currentComponent = event.data.broadcastEvent;
+                        this.currentPlus = event.data.plusNumber;
+                        this.drawer = true;
+                    },
+
+                    getComponentInput (component, componentDialogLabel) {
+                        this.newComponentUserInput = '';
+                        this.newComponent = component;
+                        this.newComponentDialogLabel = componentDialogLabel;
+                        this.componentSetupDialog = true;
+                    },
+
+                    setupComponent () {
+                        this.componentSetupDialog = false;
+                        switch (this.newComponent) {
+                            case "button":
+                                this.addComponent(this.newComponent, {
+                                    innerHTML: this.newComponentUserInput
+                                });
+                                break;
+                            case "card_title":
+                                this.addComponent(this.newComponent, {
+                                    title: this.newComponentUserInput
+                                });
+                                break;
+                            case "text_field":
+                                this.addComponent(this.newComponent, {
+                                    label: this.newComponentUserInput
+                                });
+                                break;
+                        }
+                    },
+
+                    addComponent (component, customAttributes) {
+                        switch (component) {
+                            case "button":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_btn',
+                                        color: '',
+                                        type: '',
+                                        click: '',
+                                        innerHTML: customAttributes.innerHTML
+                                    }
+                                )
+                                break;
+                            case "card":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_card',
+                                        elements: []
+                                    }
+                                );
+                                break;
+                            case "card_actions":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_card_actions',
+                                        elements: []
+                                    }
+                                );
+                                break;
+                            case "card_title":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_card_title',
+                                        title: customAttributes.title
+                                    }
+                                );
+                                break;
+                            case "card_text":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_card_text',
+                                        elements: []
+                                    }
+                                )
+                                break;
+                            case "column":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_column',
+                                        cols: 'cols="12"',
+                                        elements: []
+                                    }
+                                );
+                                break;
+                            case "text_field":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_text_field',
+                                        label: `label="${customAttributes.label}"`
+                                    }
+                                );
+                                break;
+                            case "row":
+                                this.designTemplateObject = this.replacePlusButtonElement(
+                                    this.designTemplateObject,
+                                    component,
+                                    this.currentPlus,
+                                    {
+                                        component: 'v_row',
+                                        id: `id="row${this.rowIncrement}"`,
+                                        click: `@click="insertIntoRow(${this.rowIncrement})"`,
+                                        elements: []
+                                    }
+                                );
+                                break;
+                        }
+
+                        this.designTemplateObject = this.purgeAllPlusButtons(this.designTemplateObject);
+                        this.plusIncrement = 0;
+                        this.designTemplateObject.elements
+                            = this.addPlusButtons(this.designTemplateObject.elements, false);
+                        this.initializeDesignFrame();
+                        this.initializeDisplayFrame();
+                        this.initializeMarkupFrame();
+                        this.drawer = false;
+                    },
+
+                    addPlusButtons (templateObjectElements, isComponent) {
+                        let result = [];
+
+                        if (!isComponent) {
+                            result.push({
+                                component: 'plus_button',
+                                id: `id="plus${this.plusIncrement}"`,
+                                click: `@click="plusClick(${this.plusIncrement})"`
+                            });
+                        }
+
+                        for (let i = 0; i < templateObjectElements.length; i++) {
+                            switch (templateObjectElements[i].component) {
+                                case "v_card":
+                                case "v_card_actions":
+                                case "v_card_text":
+                                case "v_column":
+                                case "v_row":
+                                    this.plusIncrement += 1;
+                                    templateObjectElements[i].id = `id="plus${this.plusIncrement}"`;
+                                    templateObjectElements[i].click = `@click="insertIntoComponent(${this.plusIncrement})"`;
+
+                                    if (templateObjectElements[i].elements.length > 0) {
+                                        this.plusIncrement += 1;
+                                        templateObjectElements[i].elements
+                                            = this.addPlusButtons(templateObjectElements[i].elements, true);
+                                    }
+                                    break;
+                            }
+
+                            result.push(templateObjectElements[i]);
+                        }
+
+                        if (!isComponent) {
+                            this.plusIncrement += 1;
+                            result.push({
+                                component: 'plus_button',
+                                id: `id="plus${this.plusIncrement}"`,
+                                click: `@click="plusClick(${this.plusIncrement})"`
+                            });
+                        }
+
+                        return result;
+                    },
+
+                    replacePlusButtonElement (templateObject, component, plusButtonNumber, componentObject) {
+                        let result = templateObject;
+
+                        for (let i = 0; i < templateObject.elements.length; i++) {
+                            if (templateObject.elements[i].component == 'plus_button') {
+                                if (templateObject.elements[i].id == `id="plus${plusButtonNumber}"`) {
+                                    templateObject.elements[i] = componentObject;
+                                    break;
+                                }
+                            } else {
+                                if (this.currentComponent != 'plusClick') {
+                                    if (templateObject.elements[i].id == `id="plus${plusButtonNumber}"`) {
+                                        templateObject.elements[i].elements.push(componentObject);
+                                        break;
+                                    }
+                                }
+
+                                if (templateObject.elements[i].elements) {
+                                    templateObject.elements[i] = this.replacePlusButtonElement(templateObject.elements[i], component, plusButtonNumber, componentObject);
+                                }
+                            }
+                        }
+
+                        result = templateObject;
+
+                        return result;
+                    },
+
+                    purgeAllPlusButtons (templateObject) {
+                        let result = {
+                            elements: []
+                        };
+
+                        for (let i = 0; i < templateObject.elements.length; i++) {
+                            let element = templateObject.elements[i];
+                            if (element.component != 'plus_button') {
+                                if (element.elements) {
+                                    element.elements = this.purgePlusButtonsFromElement(element.elements);
+                                }
+                                result.elements.push(element);
+                            }
+                        }
+
+                        return result;
+                    },
+
+                    purgePlusButtonsFromElement (elements) {
+                        let result = [];
+
+                        for (let i = 0; i < elements.length; i++) {
+                            let element = elements[i];
+                            if (element.component != 'plus_button') {
+                                if (element.elements) {
+                                    element.elements = this.purgePlusButtonsFromElement(element.elements);
+                                }
+                                result.push(element);
+                            }
+                        }
+
+                        return result;
+                    },
+
+                    compileCurrentTemplate () {
+                        let result = '';
+
+                        for (let i = 0; i < this.designTemplateObject.elements.length; i++) {
+                            let element = this.designTemplateObject.elements[i];
+                            result += this.parseElement(element);
+                        }
+
+                        return result;
+                    },
+
+                    compileDisplayTemplate () {
+                        let result = '';
+
+                        for (let i = 0; i < this.designTemplateObject.elements.length; i++) {
+                            let element = this.designTemplateObject.elements[i];
+                            if (element.component != "plus_button") {
+                                result += this.parseElementDisplay(element);
+                            }
+                        }
+
+                        return result;
+                    },
+
+                    parseElement (element) {
+                        let result = '';
+                        let innerHTML = '';
+
+                        switch (element.component) {
+                            case "plus_button":
+                                result = this.plus_button.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_btn":
+                                result = this.v_btn.replace(`{{innerHTML}}`, element.innerHTML)
+                                    .replace(`{{color}}`, element.color)
+                                    .replace(`{{type}}`, element.type)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card":
+                                result = this.v_card.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card_actions":
+                                result = this.v_card_actions.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card_text":
+                                result = this.v_card_text.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card_title":
+                                result = this.v_card_title.replace(`{{title}}`, element.title);
+                                break;
+                            case "v_column":
+                                result = this.v_column.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click)
+                                    .replace(`{{cols}}`, element.cols);
+                                break;
+                            case "v_text_field":
+                                result = this.v_text_field.replace(`{{label}}`, element.label);
+                                break;
+                            case "v_row":
+                                result = this.v_row.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                        }
+
+                        if (element.elements) {
+                            for (let i = 0; i < element.elements.length; i++) {
+                                innerHTML += this.parseElement(element.elements[i]);
+                            }
+                        }
+
+                        result = result.replace(`{{innerHTML}}`, innerHTML);
+
+                        return result;
+                    },
+
+                    parseElementDisplay (element) {
+                        let result = '';
+                        let innerHTML = '';
+
+                        switch (element.component) {
+                            case "v_btn":
+                                result = this.v_btn_markup.replace(`{{innerHTML}}`, element.innerHTML)
+                                    .replace(`{{color}}`, element.color)
+                                    .replace(`{{type}}`, element.type)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card":
+                                result = this.v_card_markup.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card_actions":
+                                result = this.v_card_actions_markup.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card_text":
+                                result = this.v_card_text_markup.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                            case "v_card_title":
+                                result = this.v_card_title_markup.replace(`{{title}}`, element.title);
+                                break;
+                            case "v_column":
+                                result = this.v_column_markup.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click)
+                                    .replace(`{{cols}}`, element.cols);
+                                break;
+                            case "v_text_field":
+                                result = this.v_text_field_markup.replace(`{{label}}`, element.label);
+                                break;
+                            case "v_row":
+                                result = this.v_row_markup.replace(`{{id}}`, element.id)
+                                    .replace(`{{click}}`, element.click);
+                                break;
+                        }
+
+                        if (element.elements) {
+                            for (let i = 0; i < element.elements.length; i++) {
+                                innerHTML += this.parseElementDisplay(element.elements[i]);
+                            }
+                        }
+
+                        result = result.replace(`{{innerHTML}}`, innerHTML);
+
+                        return result;
+                    },
+
+                    initializeDesignFrame () {
+                        this.designMarkup = this.designTemplate
+                            .replace(`{{innerHTML}}`, this.compileCurrentTemplate());
+                    },
+
+                    initializeDisplayFrame () {
+                        this.markupDisplay = this.designTemplate
+                            .replace(`{{innerHTML}}`, this.compileDisplayTemplate());
+                    },
+
+                    initializeMarkupFrame () {
+                        console.log("html_beautify:", window.html_beautify);
+                        this.markupCode = window.html_beautify(
+                            this.markupDisplay.trim().replace(/\n/g, '').replace(/\r/g, ''), {
+                            indent_size: 4,
+                            html: {
+                                extra_liners: [
+                                    'div',
+                                    '/div',
+                                    'span',
+                                    '/span',
+                                    'v-btn',
+                                    '/v-btn',
+                                    'v-card',
+                                    '/v-card',
+                                    'v-card-actions',
+                                    '/v-card-actions',
+                                    'v-card-text',
+                                    '/v-card-text',
+                                    'v-card-title',
+                                    '/v-card-title',
+                                    'v-col',
+                                    '/v-col',
+                                    'v-container',
+                                    '/v-container',
+                                    'v-row',
+                                    '/v-row',
+                                    'v-spacer',
+                                    'v-text-field',
+                                    '/v-text-field'
+                                ]
+                            }
+                        }).replace(/\n\n/g, '\n');
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
